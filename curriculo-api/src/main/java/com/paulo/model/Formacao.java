@@ -1,22 +1,44 @@
 package com.paulo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Formacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tipo; 
-    private String ano;
-    private String curso;
-    private String titulo; 
-    private String ies; 
 
+    @NotNull
+    private String tipo;
+
+    @NotNull
+    @Size(min = 4, max = 4)
+    private String ano;
+
+    @NotNull
+    private String curso;
+
+    private String titulo;
+
+    @NotNull
+    private String ies;
+
+    @ManyToOne
+    @JoinColumn(name = "curriculo_id")
+    private Curriculo curriculo;
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -63,5 +85,13 @@ public class Formacao {
 
     public void setIes(String ies) {
         this.ies = ies;
+    }
+
+    public Curriculo getCurriculo() {
+        return curriculo;
+    }
+
+    public void setCurriculo(Curriculo curriculo) {
+        this.curriculo = curriculo;
     }
 }

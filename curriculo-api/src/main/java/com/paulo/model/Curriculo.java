@@ -1,18 +1,13 @@
 package com.paulo.model;
 
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Curriculo {
 
     @Id
@@ -26,18 +21,22 @@ public class Curriculo {
     @Size(min = 10, max = 15)
     private String telefone;
 
-    private String endereco;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
+
     private boolean whatsapp;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "curriculo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Formacao> formacoes;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "curriculo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Experiencia> experiencias;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "curriculo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InformacaoAdicional> informacoesAdicionais;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -62,11 +61,11 @@ public class Curriculo {
         this.telefone = telefone;
     }
 
-    public String getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 
